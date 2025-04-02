@@ -2,17 +2,18 @@ package com.africa.musicbookingapp.music_booking.service.impl;
 
 import com.africa.musicbookingapp.music_booking.dto.request.ArtistDto;
 import com.africa.musicbookingapp.music_booking.exception.ResourceNotFoundException;
-import com.africa.musicbookingapp.music_booking.service.RepositoryManager;
-import org.junit.jupiter.api.BeforeEach;
+import com.africa.musicbookingapp.music_booking.entities.RepositoryManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
+@Transactional
 public class ArtistServiceImplTest {
 
     @Autowired
@@ -21,20 +22,17 @@ public class ArtistServiceImplTest {
     @Autowired
     private ServiceManager serviceManager;
 
-    @BeforeEach
-    void setUp() {
-        repositoryManager.getArtistRepository().deleteAll();
-    }
 
     @Test
     void testToCreateArtist() {
         var artists = new ArtistDto();
-        artists.setName("Artist");
+        artists.setUsername("Artist");
         artists.setGenre("Genre");
         artists.setContactInfo("Contact");
+
         var response = serviceManager.getArtistService().createArtist(artists);
         assertNotNull(response);
-        assertThat(response.getName().equals("Artist")).isTrue();
+        assertThat(response.getUsername().equals("Artist")).isTrue();
     }
 
     @Test
@@ -45,23 +43,23 @@ public class ArtistServiceImplTest {
     @Test
     void testToUpdateArtist() {
         var artist = new ArtistDto();
-        artist.setName("Artist1");
+        artist.setUsername("Artist1");
         artist.setGenre("Genre2");
         artist.setContactInfo("Contact");
         var response = serviceManager.getArtistService().createArtist(artist);
 
         var artist2 = new ArtistDto();
-        artist2.setName("Mike");
+        artist2.setUsername("Mike");
         artist2.setGenre("Genre2");
         artist2.setContactInfo("Contact");
-        var updatedArtist = serviceManager.getArtistService().updateArtist(response.getId(), artist2);
-        assertNotNull(updatedArtist);
-        assertThat(updatedArtist.getName().equals("Mike")).isTrue();
+        serviceManager.getArtistService().updateArtist(response.getId(), artist2);
+        var updatedArtist = serviceManager.getArtistService().getArtistById(response.getId());
+        assertThat(updatedArtist.getName()).isEqualTo("Mike");
     }
     @Test
     void testToDeleteArtist() {
         var artist = new ArtistDto();
-        artist.setName("Kume");
+        artist.setUsername("Kume");
         artist.setGenre("Genre2");
         artist.setContactInfo("Contact");
         var response = serviceManager.getArtistService().createArtist(artist);

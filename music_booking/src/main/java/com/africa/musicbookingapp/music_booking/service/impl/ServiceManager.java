@@ -3,6 +3,7 @@ package com.africa.musicbookingapp.music_booking.service.impl;
 import com.africa.musicbookingapp.music_booking.service.IArtistService;
 import com.africa.musicbookingapp.music_booking.service.IBookingService;
 import com.africa.musicbookingapp.music_booking.service.IEventService;
+import com.africa.musicbookingapp.music_booking.service.IInterfaceManager;
 import com.africa.musicbookingapp.music_booking.service.ITransactionService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Getter
-public class ServiceManager {
+public class ServiceManager implements IInterfaceManager {
 
     private final IArtistService artistService;
     private final IEventService eventService;

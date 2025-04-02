@@ -1,6 +1,6 @@
-package com.africa.musicbookingapp.music_booking.repository;
+package com.africa.musicbookingapp.music_booking.entities.repository;
 
-import com.africa.musicbookingapp.music_booking.domain.model.Event;
+import com.africa.musicbookingapp.music_booking.entities.model.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,39 +1,28 @@
 package com.africa.musicbookingapp.music_booking.mapper;
 
-import com.africa.musicbookingapp.music_booking.domain.model.Artist;
-import com.africa.musicbookingapp.music_booking.domain.model.Booking;
-import com.africa.musicbookingapp.music_booking.domain.model.Event;
-import com.africa.musicbookingapp.music_booking.dto.request.ArtistDto;
 import com.africa.musicbookingapp.music_booking.dto.request.BookingDto;
 import com.africa.musicbookingapp.music_booking.dto.request.EventDto;
+import com.africa.musicbookingapp.music_booking.dto.request.PaystackPaymentRequestDto;
 import com.africa.musicbookingapp.music_booking.dto.response.ArtistResponseDto;
 import com.africa.musicbookingapp.music_booking.dto.response.BookingResponseDto;
 import com.africa.musicbookingapp.music_booking.dto.response.EventResponseDto;
+import com.africa.musicbookingapp.music_booking.dto.response.PaystackPaymentResponseDto;
+import com.africa.musicbookingapp.music_booking.entities.model.Artist;
+import com.africa.musicbookingapp.music_booking.entities.model.Booking;
+import com.africa.musicbookingapp.music_booking.entities.model.Event;
+import com.africa.musicbookingapp.music_booking.entities.model.NewUserRecord;
+import com.africa.musicbookingapp.music_booking.entities.model.Transaction;
 import javax.annotation.processing.Generated;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-01T04:09:17+0100",
+    date = "2025-04-02T17:24:12+0100",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 21.0.6 (Oracle Corporation)"
 )
 @Component
 public class MusicBookingMapperImpl implements MusicBookingMapper {
-
-    @Override
-    public Artist toArtist(ArtistDto dto) {
-        if ( dto == null ) {
-            return null;
-        }
-
-        Artist artist = new Artist();
-
-        artist.setName( dto.getName() );
-        artist.setGenre( dto.getGenre() );
-        artist.setContactInfo( dto.getContactInfo() );
-
-        return artist;
-    }
 
     @Override
     public ArtistResponseDto toArtistResponseDto(Artist artist) {
@@ -44,9 +33,8 @@ public class MusicBookingMapperImpl implements MusicBookingMapper {
         ArtistResponseDto artistResponseDto = new ArtistResponseDto();
 
         artistResponseDto.setId( artist.getId() );
-        artistResponseDto.setName( artist.getName() );
-        artistResponseDto.setGenre( artist.getGenre() );
-        artistResponseDto.setContactInfo( artist.getContactInfo() );
+        artistResponseDto.setUsername( artist.getUsername() );
+        artistResponseDto.setDateCreated( artist.getDateCreated() );
 
         return artistResponseDto;
     }
@@ -61,7 +49,6 @@ public class MusicBookingMapperImpl implements MusicBookingMapper {
 
         event.setName( dto.getName() );
         event.setLocation( dto.getLocation() );
-        event.setEventDate( dto.getEventDate() );
 
         return event;
     }
@@ -74,6 +61,11 @@ public class MusicBookingMapperImpl implements MusicBookingMapper {
 
         EventResponseDto eventResponseDto = new EventResponseDto();
 
+        eventResponseDto.setId( event.getId() );
+        eventResponseDto.setName( event.getName() );
+        eventResponseDto.setLocation( event.getLocation() );
+        eventResponseDto.setEventDate( event.getEventDate() );
+
         return eventResponseDto;
     }
 
@@ -84,6 +76,9 @@ public class MusicBookingMapperImpl implements MusicBookingMapper {
         }
 
         Booking booking = new Booking();
+
+        booking.setAmount( dto.getAmount() );
+        booking.setEmail( dto.getEmail() );
 
         return booking;
     }
@@ -96,6 +91,65 @@ public class MusicBookingMapperImpl implements MusicBookingMapper {
 
         BookingResponseDto bookingResponseDto = new BookingResponseDto();
 
+        bookingResponseDto.setId( booking.getId() );
+        bookingResponseDto.setArtist( booking.getArtist() );
+        bookingResponseDto.setEvent( booking.getEvent() );
+        bookingResponseDto.setAmount( booking.getAmount() );
+        bookingResponseDto.setTransactionStatus( booking.getTransactionStatus() );
+
         return bookingResponseDto;
+    }
+
+    @Override
+    public Transaction toTransaction(PaystackPaymentRequestDto dto) {
+        if ( dto == null ) {
+            return null;
+        }
+
+        Transaction transaction = new Transaction();
+
+        transaction.setEmail( dto.getEmail() );
+        transaction.setAmount( dto.getAmount() );
+
+        return transaction;
+    }
+
+    @Override
+    public PaystackPaymentResponseDto toTransactionResponseDto(Transaction transaction) {
+        if ( transaction == null ) {
+            return null;
+        }
+
+        PaystackPaymentResponseDto paystackPaymentResponseDto = new PaystackPaymentResponseDto();
+
+        paystackPaymentResponseDto.setStatus( transaction.getStatus() );
+        paystackPaymentResponseDto.setAmount( transaction.getAmount() );
+        paystackPaymentResponseDto.setDateCreated( transaction.getDateCreated() );
+
+        return paystackPaymentResponseDto;
+    }
+
+    @Override
+    public Artist toArtist(NewUserRecord newUserRecord, UserRepresentation userRepresentation) {
+        if ( newUserRecord == null && userRepresentation == null ) {
+            return null;
+        }
+
+        Artist artist = new Artist();
+
+        if ( newUserRecord != null ) {
+            artist.setFirstname( newUserRecord.firstName() );
+            artist.setLastname( newUserRecord.lastName() );
+            artist.setPassword( newUserRecord.password() );
+        }
+        if ( userRepresentation != null ) {
+            artist.setUsername( userRepresentation.getUsername() );
+            artist.setEmail( userRepresentation.getEmail() );
+            if ( userRepresentation.getId() != null ) {
+                artist.setId( Long.parseLong( userRepresentation.getId() ) );
+            }
+        }
+
+        return artist;
     }
 }

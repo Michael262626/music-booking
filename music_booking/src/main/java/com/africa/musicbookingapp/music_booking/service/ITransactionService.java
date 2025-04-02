@@ -1,6 +1,8 @@
 package com.africa.musicbookingapp.music_booking.service;
 
+import com.africa.musicbookingapp.music_booking.dto.request.PaystackPaymentRequestDto;
+import com.africa.musicbookingapp.music_booking.dto.response.PaystackPaymentResponseDto;
+
 public interface ITransactionService {
-    boolean processPayment(double amount, String paymentMethod);
-    boolean processRefund(double amount);
+    PaystackPaymentResponseDto processPayment(PaystackPaymentRequestDto paymentRequest);
 }

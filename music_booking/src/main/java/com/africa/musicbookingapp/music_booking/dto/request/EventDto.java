@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class EventDto {
+    private Long artistId;
     private String name;
     private String location;
-    private LocalDateTime eventDate;
 }
